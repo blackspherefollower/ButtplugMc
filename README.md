@@ -88,13 +88,18 @@ You should see a log saying something like:
 
 It might take a few seconds to find the toy.
 
-If it doesn't find a toy, try:
+If it doesn't find a toy, please ensure the following is true:
 
-- restarting the Minecraft server
-- restarting the Intiface server
-- turning the toy off and on again
+- Is Intiface running?
+- Is your toy is visible in the Intiface UI?
+  - Check the Devices tab
+  - This might require turning Intice AND the toy off and on again
+- Is Intiface server listening on all network interfaces?
+   - Check the Settings tab
+- Is Intiface running on the same machine as the MC server?
+  - If not, you will need to port forward your Intiface Server port through your firewall and router
 
-If it still doesn't work, feel free to file an Issue.
+If all of this is true, and things still don't work, please create a new Issue and provide your logs from the MC Server and Intiface.
 
 # Commands
 
