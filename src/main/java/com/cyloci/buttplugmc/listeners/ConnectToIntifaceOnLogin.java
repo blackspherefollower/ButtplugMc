@@ -16,8 +16,9 @@ public class ConnectToIntifaceOnLogin implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) throws Exception {
         Player player = event.getPlayer();
         this.clientManager.getClient(player);
+        player.sendMessage("jour UUID is " + player.getUniqueId());
     }
 }

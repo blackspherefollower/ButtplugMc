@@ -13,13 +13,20 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 public class ButtplugMc extends JavaPlugin {
 
   private ButtplugClientManager clientManager;
 
   @Override
   public void onLoad() {
-    this.clientManager = new ButtplugClientManager(this);
+    try {
+      this.clientManager = new ButtplugClientManager(this);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
     CommandAPI.onLoad(new CommandAPIConfig());
 
     VibrateCommand vibrateCommand = new VibrateCommand(this.clientManager);
@@ -28,7 +35,11 @@ public class ButtplugMc extends JavaPlugin {
         .withArguments(new DoubleArgument("level"))
         .executesPlayer((player, args) -> {
           double level = (double) args[0];
-          vibrateCommand.handleCommand(player, level);
+          try {
+            vibrateCommand.handleCommand(player, level);
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
         })
         .executesProxy((proxy, args) -> {
           if (!(proxy.getCallee() instanceof Player)) {
@@ -36,7 +47,11 @@ public class ButtplugMc extends JavaPlugin {
           }
           Player player = (Player) proxy.getCallee();
           double level = (double) args[0];
-          vibrateCommand.handleCommand(player, level);
+          try {
+            vibrateCommand.handleCommand(player, level);
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
         })
         .register();
   }
@@ -57,8 +72,18 @@ public class ButtplugMc extends JavaPlugin {
   @Override
   public void onDisable() {
     this.clientManager.getClients().forEach(client -> {
-      client.stopAllDevices();
-      client.close();
+      try {
+        client.stopAllDevices();
+      } catch (ExecutionException e) {
+        throw new RuntimeException(e);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      finally {
+        client.disconnect();
+      }
     });
     saveConfig();
     getLogger().info("Buttplug MC is disabled.");

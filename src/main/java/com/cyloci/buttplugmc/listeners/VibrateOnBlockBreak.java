@@ -3,13 +3,15 @@ package com.cyloci.buttplugmc.listeners;
 import com.cyloci.buttplugmc.ButtplugClientManager;
 import com.cyloci.utils.Sleep;
 
-import io.buttplug.ButtplugClient;
-
+import org.blackspherefollower.buttplug.client.ButtplugClientWSEndpoint;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class VibrateOnBlockBreak implements Listener {
 
@@ -31,19 +33,29 @@ public class VibrateOnBlockBreak implements Listener {
   }
 
   @EventHandler
-  public void onBlockBreak(BlockBreakEvent event) {
+  public void onBlockBreak(BlockBreakEvent event) throws Exception {
     Player player = event.getPlayer();
-    ButtplugClient client = this.clientManager.getClient(player);
+    ButtplugClientWSEndpoint client = this.clientManager.getClient(player);
     if (client == null) {
       return;
     }
     String blockName = event.getBlock().getType().name();
     int level = this.plugin.getConfig().getInt(BLOCK_TO_VIBRATE_OPTIONS + "." + blockName + ".level");
     int duration = this.plugin.getConfig().getInt(BLOCK_TO_VIBRATE_OPTIONS + "." + blockName + ".duration");
-    client.getDevices().values().forEach(device -> {
-      device.vibrate(level / 100.0);
-      Sleep.sleep(duration);
-      device.vibrate(0.0);
+    client.getDevices().forEach(device -> {
+      try {
+        if( device.getScalarVibrateCount() > 0) {
+          device.sendScalarVibrateCmd(level / 100.0);
+          Sleep.sleep(duration);
+          device.sendScalarVibrateCmd(0.0);
+        }
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      } catch (ExecutionException e) {
+        throw new RuntimeException(e);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
     });
   }
 }
