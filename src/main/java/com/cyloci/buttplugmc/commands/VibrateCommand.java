@@ -1,6 +1,6 @@
 package com.cyloci.buttplugmc.commands;
 
-import org.blackspherefollower.buttplug.client.ButtplugClientWSEndpoint;
+import io.github.blackspherefollower.buttplug4j.client.ButtplugClientWSEndpoint;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

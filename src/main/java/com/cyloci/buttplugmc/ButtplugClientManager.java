@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 
 import com.cyloci.utils.Sleep;
 
-import org.blackspherefollower.buttplug.client.*;
+import io.github.blackspherefollower.buttplug4j.client.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 

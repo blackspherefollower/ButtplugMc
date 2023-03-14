@@ -24,7 +24,7 @@
         </repository>
         <repository>
             <id>blackspherefollower-buttplug4j</id>
-            <url>https://maven.pkg.github.com/lackspherefollower/buttplug4j</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -82,9 +82,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.blackspherefollower.buttplug</groupId>
+            <groupId>io.github.blackspherefollower</groupId>
             <artifactId>buttplug4j</artifactId>
-            <version>3.0.17-SNAPSHOT</version>
+            <version>3.0.46-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dev.jorel.CommandAPI</groupId>

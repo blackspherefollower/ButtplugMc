@@ -3,7 +3,7 @@ package com.cyloci.buttplugmc.listeners;
 import com.cyloci.buttplugmc.ButtplugClientManager;
 import com.cyloci.utils.Sleep;
 
-import org.blackspherefollower.buttplug.client.ButtplugClientWSEndpoint;
+import io.github.blackspherefollower.buttplug4j.client.ButtplugClientWSEndpoint;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
