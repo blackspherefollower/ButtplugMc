@@ -3,7 +3,7 @@ package com.cyloci.buttplugmc.listeners;
 import com.cyloci.buttplugmc.ButtplugClientManager;
 import com.cyloci.utils.Sleep;
 
-import io.github.blackspherefollower.buttplug4j.client.ButtplugClientWSEndpoint;
+import io.github.blackspherefollower.buttplug4j.client.ButtplugClient;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +35,7 @@ public class VibrateOnBlockBreak implements Listener {
   @EventHandler
   public void onBlockBreak(BlockBreakEvent event) throws Exception {
     Player player = event.getPlayer();
-    ButtplugClientWSEndpoint client = this.clientManager.getClient(player);
+    ButtplugClient client = this.clientManager.getClient(player);
     if (client == null) {
       return;
     }

@@ -1,6 +1,6 @@
 package com.cyloci.buttplugmc.commands;
 
-import io.github.blackspherefollower.buttplug4j.client.ButtplugClientWSEndpoint;
+import io.github.blackspherefollower.buttplug4j.client.ButtplugClient;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -22,7 +22,7 @@ public class VibrateCommand {
       player.sendMessage(ChatColor.RED + "'level' must be between 0 and 100");
       return;
     }
-    ButtplugClientWSEndpoint client = this.clientManager.getClient(player);
+    ButtplugClient client = this.clientManager.getClient(player);
     client.getDevices().forEach(device -> {
       try {
         if( device.getScalarVibrateCount() > 0) {

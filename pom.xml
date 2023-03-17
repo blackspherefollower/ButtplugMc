@@ -84,7 +84,7 @@
         <dependency>
             <groupId>io.github.blackspherefollower</groupId>
             <artifactId>buttplug4j</artifactId>
-            <version>3.0.46-SNAPSHOT</version>
+            <version>3.0.47-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dev.jorel.CommandAPI</groupId>

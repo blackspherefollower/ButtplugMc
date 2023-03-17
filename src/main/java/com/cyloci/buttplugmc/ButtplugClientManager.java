@@ -28,7 +28,7 @@ import javax.websocket.server.ServerEndpointConfig;
 public class ButtplugClientManager {
 
     private final JavaPlugin plugin;
-    private final ConcurrentHashMap<UUID, ButtplugClientWSEndpoint> clients;
+    private final ConcurrentHashMap<UUID, ButtplugClient> clients;
 
     private final ButtplugClientWSServerExample wsServer;
 
@@ -38,15 +38,15 @@ public class ButtplugClientManager {
         this.wsServer = new ButtplugClientWSServerExample(this, 54321);
     }
 
-    public Collection<ButtplugClientWSEndpoint> getClients() {
+    public Collection<ButtplugClient> getClients() {
         return this.clients.values();
     }
 
-    public ButtplugClientWSEndpoint getClient(Player player) throws Exception {
+    public ButtplugClient getClient(Player player) throws Exception {
         UUID playerId = player.getUniqueId();
         boolean withPlayerFeedback = false;
-        ButtplugClientWSEndpoint client = this.clients.get(playerId);
-        if (client == null || client.getConnectionState() == ButtplugClientWSEndpoint.ConnectionState.DISCONNECTED ) {
+        ButtplugClient client = this.clients.get(playerId);
+        if (client == null || client.getConnectionState() == ButtplugClient.ConnectionState.DISCONNECTED ) {
             player.sendMessage(ChatColor.AQUA + "Reconnecting to Intiface...");
             withPlayerFeedback = true;
             client = connectButtplugClient(player.getAddress().getAddress());
@@ -56,7 +56,7 @@ public class ButtplugClientManager {
         return client;
     }
 
-    private ButtplugClientWSEndpoint connectButtplugClient(InetAddress address) throws Exception {
+    private ButtplugClient connectButtplugClient(InetAddress address) throws Exception {
         URI uri;
         try {
             uri = new URI("ws://" + address.getHostAddress() + ":12345/buttplug");
@@ -69,7 +69,7 @@ public class ButtplugClientManager {
         return client;
     }
 
-    private void scanForToys(ButtplugClientWSEndpoint client, Player player, boolean withPlayerFeedback) throws IOException, ExecutionException, InterruptedException {
+    private void scanForToys(ButtplugClient client, Player player, boolean withPlayerFeedback) throws IOException, ExecutionException, InterruptedException {
         int attempts = 0;
         while (client.getDevices().size() == 0) {
             client.startScanning();
@@ -114,18 +114,18 @@ public class ButtplugClientManager {
         }
     }
 
-    public boolean addConnection(String user, ButtplugClientWSEndpoint client) throws IOException, ExecutionException, InterruptedException {
+    public boolean addConnection(String user, ButtplugClient client) throws IOException, ExecutionException, InterruptedException {
         Player player = plugin.getServer().getPlayer( user);
         if( player == null) {
             client.disconnect();
             return false;
         }
-        ButtplugClientWSEndpoint old = clients.putIfAbsent(player.getUniqueId(), client);
+        ButtplugClient old = clients.putIfAbsent(player.getUniqueId(), client);
         if( old == null) {
             scanForToys(client, player, false);
             return true;
         }
-        if( old.getConnectionState() == ButtplugClientWSEndpoint.ConnectionState.DISCONNECTED) {
+        if( old.getConnectionState() == ButtplugClient.ConnectionState.DISCONNECTED) {
             clients.put(player.getUniqueId(), client);
             scanForToys(client, player, false);
             return true;
@@ -160,14 +160,14 @@ public class ButtplugClientManager {
                 wsContainer.setDefaultMaxTextMessageBufferSize(65535);
 
                 // Add websockets
-                wsContainer.addEndpoint(ServerEndpointConfig.Builder.create(ButtplugClientWSEndpoint.class, "/{user}").configurator(new ServerEndpointConfig.Configurator() {
+                wsContainer.addEndpoint(ServerEndpointConfig.Builder.create(ButtplugClient.class, "/{user}").configurator(new ServerEndpointConfig.Configurator() {
                     @Override
                     public <T> T getEndpointInstance(Class<T> endpointClass) {
-                        if (endpointClass == ButtplugClientWSEndpoint.class) {
+                        if (endpointClass == ButtplugClient.class) {
                             ButtplugClientWSServer client = new ButtplugClientWSServer("Java WS Server Buttplug Client");
                             client.setOnConnected(new IConnectedEvent() {
                                 @Override
-                                public void onConnected(ButtplugClientWSEndpoint client) {
+                                public void onConnected(ButtplugClient client) {
                                     new Thread(() -> {
                                         try {
                                             if (client instanceof ButtplugClientWSServer) {
